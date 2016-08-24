@@ -256,12 +256,109 @@
     basec.autoreverses=YES;
     basec.repeatCount=HUGE;
     [layer addAnimation:basec forKey:@"unlock"];
+    
+    
+    [self Quartz2D];
 }
 
 
+#pragma mark  Quartz2D使用（绘制基本图形）
 
+- (void)Quartz2D{
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(100, 100), NO, 0);
+    //1.获取bitmap上下文
+    CGContextRef context=UIGraphicsGetCurrentContext();
+     //2.绘图(画一个圆)
+    //CGContextAddEllipseInRect(context, CGRectMake(0, 0, 100, 100));
+    //画一条直线
+    CGContextMoveToPoint(context, 0, 50);
+    CGContextAddLineToPoint(context, 100, 50);
+    CGContextAddLineToPoint(context, 50, 100);
+    CGContextClosePath(context);
+    //画弧线
+//    CGContextAddArc(context, 50, 50, 50, 0, M_PI*2, 1);
+    //画矩形
+//    CGContextAddRect(context, CGRectMake(0, 0, 100, 100));
+    //贝塞尔曲线
+//    CGContextMoveToPoint(context, 0, 0);
+//    CGContextAddArcToPoint(context, 100, 0, 50, 100, 50);
+    //圆弧
+//    CGContextMoveToPoint(context, 0, 0);
+//    CGContextAddQuadCurveToPoint(context, 100, 0, 50, 50);
+    //
+//    CGContextMoveToPoint(context, 0, 50);
+//    CGContextAddCurveToPoint(context, 100, 50, 25, 0, 75, 100);
+    //选择填充颜色
+    //CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
+    //CGContextSetRGBFillColor(context, 0.5, 0.5, 0.5, 1);
+    CGContextSetLineWidth(context, 10);
+    //选择描边颜色;
+    CGContextSetStrokeColorWithColor(context, [UIColor blueColor].CGColor);
+    //填充
+    //CGContextFillPath(context);
+    //描边
+    CGContextStrokePath(context);
+    //获取生成的图片
+    UIImage *image=UIGraphicsGetImageFromCurrentImageContext();
+    //创建uiimageView
+    UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, [[UIScreen mainScreen] bounds].size.height-100, 100, 100)];
+    imageView.image=image;
+    [self.view addSubview:imageView];
+    //获取图片数据
+    //NSData *imageData=UIImagePNGRepresentation(image);
+    //image 保存到相册
+   // UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSaveWithError:contextInfo:), NULL);
+    
+    NSString *str=@"测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试";
+    
+   NSMutableAttributedString *attr=[[NSMutableAttributedString alloc]initWithString:str];
+    //颜色
+    [attr addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, str.length)];
+    //下划线
+    [attr addAttribute:NSUnderlineStyleAttributeName value:@1 range:NSMakeRange(0, str.length)];
+    //下划线颜色
+    [attr addAttribute:NSUnderlineColorAttributeName value:[UIColor darkGrayColor] range:NSMakeRange(0, str.length)];
+    //字体间距
+    [attr addAttribute:NSKernAttributeName value:@3 range:NSMakeRange(0, str.length)];
+    //连字
+    [attr addAttribute:NSLigatureAttributeName value:@10 range:NSMakeRange(0, str.length)];
+    //空心字
+    [attr addAttribute:NSStrokeWidthAttributeName value:@2 range:NSMakeRange(0, str.length)];
+    //空心字颜色
+    [attr addAttribute:NSStrokeColorAttributeName value:[UIColor blueColor] range:NSMakeRange(0, str.length)];
+    // 斜体
+    [attr addAttribute:NSFontAttributeName value:[UIFont italicSystemFontOfSize:15] range:NSMakeRange(0, str.length)];
+    //行间距
+    NSMutableParagraphStyle *style=[[NSMutableParagraphStyle alloc]init];
+    [style setLineSpacing:5];
+    [attr addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(0, str.length)];
+    
+    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(10, 400, [[UIScreen mainScreen] bounds].size.width-20, 19)];
+    label.numberOfLines=0;
+    label.attributedText=attr;
+    [label sizeToFit];
+    [self.view addSubview:label];
+    
+    //计算但行文字的宽度
+    CGSize size=[str sizeWithAttributes:@{NSFontAttributeName:[UIFont italicSystemFontOfSize:15]}];
+    NSLog(@"%f===%f",size.width,size.height);
+    
+    //计算多行文本的高度
+    CGSize multiLineSize=[str boundingRectWithSize:CGSizeMake([[UIScreen mainScreen] bounds].size.width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont italicSystemFontOfSize:15]} context:NULL].size;
+    NSLog(@"%f----%f",multiLineSize.width,multiLineSize.height);
+    
+    
+    
+}
 
-
+//保存图片是否成功
+- (void)image:(UIImage *)image didFinishSaveWithError:(NSError *)err contextInfo:(void *)contextInfo{
+    if (err) {
+        NSLog(@"图片保存失败");
+    }else{
+        NSLog(@"图片保存成功");
+    }
+}
 /**
  *  创建遮罩层
  */
