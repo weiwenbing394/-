@@ -46,9 +46,11 @@
         for (int i=0; i<dataItems.count; i++) {
             _total+=[dataItems[i] floatValue];
         }
-        
+        NSLog(@"===%.0f",radiusBasic);
         //背景路径
         CGFloat bgRadius=radiusBasic*0.5;
+        NSLog(@"===%.0f",bgRadius);
+        
         UIBezierPath *bgPath=[UIBezierPath bezierPathWithArcCenter:centerPoint radius:bgRadius startAngle:-M_PI_2 endAngle:M_PI_2*3 clockwise:YES];
         _bgCircleLayer=[CAShapeLayer layer];
         _bgCircleLayer.fillColor=[UIColor clearColor].CGColor;

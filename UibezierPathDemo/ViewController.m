@@ -26,7 +26,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _drawView=[[DrawView alloc]initWithFrame:CGRectMake((kScreenWidth-200)/2.0,(kScreenHeight-300)/2.0 , 200, 200) dataItems:@[@6,@12,@7] colorItems:@[[UIColor greenColor],[UIColor redColor],[UIColor blueColor]]];
+    _drawView=[[DrawView alloc]initWithFrame:CGRectMake((kScreenWidth-200)/2.0,100 , 200, 200) dataItems:@[@6,@12,@7] colorItems:@[[UIColor greenColor],[UIColor redColor],[UIColor blueColor]]];
     [self.view addSubview:_drawView];
     
     [_drawView stroke];
@@ -177,7 +177,91 @@
 //    basic.removedOnCompletion=NO;
 //    basic.fillMode=kCAFillModeForwards;
 //    [nei addAnimation:basic forKey:@"animate"];
+    
+    //虚线
+//    UIBezierPath *path=[UIBezierPath bezierPathWithArcCenter:CGPointMake(150,150) radius:150 startAngle:0 endAngle:M_PI*2 clockwise:YES];
+//    
+//    
+//    CAShapeLayer *layer=[CAShapeLayer layer];
+//    layer.lineWidth=5;
+//    layer.strokeColor=[UIColor redColor].CGColor;
+//    layer.fillColor=[UIColor clearColor].CGColor;
+//    layer.path=path.CGPath;
+//    layer.lineDashPattern=@[@10,@10,@20,@20];
+//    
+//    //cagrdientLayer
+//    CAGradientLayer *colorlayer=[CAGradientLayer layer];
+//    colorlayer.frame=CGRectMake(self.view.center.x-150, self.view.center.y-150, 300, 300);
+//    colorlayer.colors=@[(__bridge id)([UIColor redColor].CGColor),(__bridge id)([UIColor blueColor].CGColor),(__bridge id)([UIColor greenColor].CGColor)];
+//    colorlayer.locations=@[@0.25,@0.5,@0.75];
+//    colorlayer.startPoint=CGPointMake(0, 0.5);
+//    colorlayer.endPoint=CGPointMake(1,0.5);
+//    [self.view.layer addSublayer:colorlayer];
+//    colorlayer.mask=layer;
+//    
+//    CABasicAnimation *anim=[CABasicAnimation animationWithKeyPath:@"locations"];
+//    anim.fromValue=@[@0,@0,@0.25];
+//    anim.toValue=@[@0.75,@1,@1];
+//    anim.duration=2;
+//    anim.removedOnCompletion=NO;
+//    anim.fillMode=kCAFillModeForwards;
+//    anim.repeatCount=HUGE;
+//    [colorlayer addAnimation:anim forKey:@"locations"];
+//    self.view.backgroundColor=[UIColor lightGrayColor];
+//    
+    //iphone滑动解锁
+    CAGradientLayer *unlockLayer=[CAGradientLayer layer];
+    unlockLayer.frame=CGRectMake(0, self.view.center.y-25, [[UIScreen mainScreen] bounds].size.width, 50);
+    unlockLayer.colors=@[(__bridge id)([UIColor blackColor].CGColor),(__bridge id)([UIColor whiteColor].CGColor),(__bridge id)([UIColor blackColor].CGColor)];
+    unlockLayer.startPoint=CGPointMake(0, 0.5);
+    unlockLayer.endPoint=CGPointMake(1, 0.5);
+    unlockLayer.locations=@[@0.25,@0.5,@0.75];
+    [self.view.layer addSublayer:unlockLayer];
+    
+    CABasicAnimation *basec2=[CABasicAnimation animationWithKeyPath:@"locations"];
+    basec2.fromValue=@[@0,@0,@0.25];
+    basec2.toValue=@[@0.75,@1,@1];
+    basec2.duration=2;
+    basec2.removedOnCompletion=YES;
+    basec2.repeatCount=HUGE;
+    [unlockLayer addAnimation:basec2 forKey:@"unlock"];
+    
+    UILabel *label=[[UILabel alloc]initWithFrame:unlockLayer.bounds];
+    label.text=@"滑动来解锁 >>";
+    label.alpha=0.5;
+    label.font=[UIFont boldSystemFontOfSize:30];
+    label.textAlignment=NSTextAlignmentCenter;
+    [self.view addSubview:label];
+    unlockLayer.mask=label.layer;
+    
+    //不断循环的颜色变换动画
+    UIBezierPath *path=[UIBezierPath bezierPath];
+    [path moveToPoint:CGPointMake(0, 80)];
+    [path addLineToPoint:CGPointMake([[UIScreen mainScreen] bounds].size.width, 80)];
+    
+    CAGradientLayer *layer=[CAGradientLayer layer];
+    layer.frame=CGRectMake(0, 80, [[UIScreen mainScreen] bounds].size.width, 2);
+    layer.colors=@[(__bridge id)([UIColor blueColor].CGColor),(__bridge id)([UIColor greenColor].CGColor),(__bridge id)([UIColor redColor].CGColor),(__bridge id)([UIColor yellowColor].CGColor)];
+    layer.locations=@[@0.2,@0.4,@0.6,@0.8];
+    layer.startPoint=CGPointMake(0, 0.5);
+    layer.endPoint=CGPointMake(1, 0.5);
+    [self.view.layer addSublayer:layer];
+    
+    CABasicAnimation *basec=[CABasicAnimation animationWithKeyPath:@"locations"];
+    basec.fromValue=@[@0,@0,@0,@0.2];
+    basec.toValue=@[@0.3,@0.6,@1,@1];
+    basec.duration=2;
+    basec.removedOnCompletion=NO;
+    basec.fillMode=kCAFillModeForwards;
+    basec.autoreverses=YES;
+    basec.repeatCount=HUGE;
+    [layer addAnimation:basec forKey:@"unlock"];
 }
+
+
+
+
+
 /**
  *  创建遮罩层
  */
